@@ -1,16 +1,20 @@
-const { app, BrowserWindow } = require('electron');
-const { menubar } = require('menubar');
+const path = require('path')
+const { app, Menu, Tray } = require('electron')
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
-  app.quit();
+  app.quit()
 }
 
-const mb = menubar({"dir": "src"});
+const iconPath = path.join(__dirname, 'IconTemplate.png')
 
-mb.on('ready', () => {
-	console.log('Menubar app is ready.');
-});
+let tray = null
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+app.whenReady().then(() => {
+  tray = new Tray(iconPath)
+  const contextMenu = Menu.buildFromTemplate([
+    {label: 'TODO Sync Status', id: 'syncStatus', enabled: false},
+    {label: 'Quit', role: 'quit'},
+  ])
+  tray.setContextMenu(contextMenu)
+})
