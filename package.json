@@ -19,6 +19,7 @@
   "license": "MIT",
   "config": {
     "forge": {
+      "bundleIdentifier": "io.put.sync",
       "packagerConfig": {},
       "makers": [
         {
