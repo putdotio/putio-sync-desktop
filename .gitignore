@@ -1,3 +1,6 @@
+# Binary
+/bin/putio-sync
+
 # Logs
 logs
 *.log
