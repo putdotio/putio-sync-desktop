@@ -45,15 +45,18 @@ module.exports = {
   makers: [
     {
       name: "@electron-forge/maker-squirrel",
+      platforms: ["win32"],
       config: {
         name: "putio_sync_desktop"
       }
     },
     {
-      name: "@electron-forge/maker-zip",
-      platforms: [
-        "darwin"
-      ]
+      name: '@electron-forge/maker-dmg',
+      platforms: ["darwin"],
+      config: {
+        icon: path.join("img", "putio-sync.icns"),
+        overwrite: true,
+      },
     },
   ],
   hooks: {
