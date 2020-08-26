@@ -1,22 +1,20 @@
-const path = require('path')
-const { app, Menu, Tray, net } = require('electron')
-const { spawn } = require('child_process');
-const getPort = require('get-port');
+import { app, Menu, Tray, net } from 'electron';
+import * as path from 'path';
+import { spawn } from 'child_process';
+import * as getPort from 'get-port';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit()
 }
 
-// TODO maybe use __dirname instead of path.resolve()
-const appPath = app.getAppPath()
-const iconPath = path.join(appPath, 'img', 'IconTemplate.png')
+const iconPath = path.join(app.getAppPath(), 'img', 'IconTemplate.png')
 const host = '127.0.0.1'
-let port = null
-let tray = null
-let menu = null
+let port: number = null
+let tray: Tray = null
+let menu: Menu = null
 
-function createMenu(syncStatus) {
+function createMenu(syncStatus: string) {
   return Menu.buildFromTemplate([
     {label: syncStatus, id: 'syncStatus', enabled: false},
     {label: 'Quit', role: 'quit'},
@@ -41,8 +39,9 @@ function updateStatus() {
       return
     }
     response.on('data', (chunk) => {
+      let parsed = null
       try {
-        var parsed = JSON.parse(chunk)
+        parsed = JSON.parse(String(chunk))
       } catch(e) {
         return
       }
@@ -56,7 +55,7 @@ function updateStatus() {
 
 getPort({host: host}).then(foundPort => {
   port = foundPort
-  const ls = spawn(path.join(appPath, 'bin', 'putio-sync'), ['-repeat', '10s', '-server', host + ':' + port], {
+  const ls = spawn(path.join(app.getAppPath(), 'bin', 'putio-sync'), ['-repeat', '10s', '-server', host + ':' + port], {
     stdio: ['ignore', 'ignore', 'pipe'],
   });
 
