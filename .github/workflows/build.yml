@@ -19,8 +19,14 @@ jobs:
         with:
           node-version: 10
 
+      - name: Install dependencies
+        run: yarn install
+
       - name: Run linter
         run: yarn lint
+
+      - name: Download putio-sync binary
+        run: yarn run downloadBinary
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
