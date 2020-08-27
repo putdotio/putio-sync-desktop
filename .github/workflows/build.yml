@@ -20,7 +20,10 @@ jobs:
           node-version: 10
 
       - name: Install dependencies
-        run: yarn install --json
+        run: |
+          ls -al
+          tree
+          yarn install --json
 
       - name: Run linter
         run: yarn lint
