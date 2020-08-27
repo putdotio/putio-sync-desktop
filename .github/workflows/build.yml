@@ -32,7 +32,7 @@ jobs:
         run: yarn lint
 
       - name: Compile Webpack
-        run: electron-webpack
+        run: yarn compile
 
       - name: Download putio-sync binary
         run: yarn run downloadBinary
