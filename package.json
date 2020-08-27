@@ -1,43 +1,53 @@
 {
-  "name": "putio-sync-desktop",
-  "productName": "putio-sync-desktop",
-  "version": "1.0.0",
+  "name": "putio-sync",
   "description": "Sync a folder between put.io and your computer",
-  "main": "dist/index.js",
-  "scripts": {
-    "compile": "tsc",
-    "start": "yarn compile && electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "make:win": "electron-forge make --platform=win32",
-    "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts ."
-  },
-  "keywords": [],
+  "version": "1.0.1",
+  "license": "MIT",
   "author": {
     "name": "Cenk Alti",
-    "email": "cenkalti@gmail.com"
+    "email": "cenk@put.io"
   },
-  "license": "MIT",
-  "config": {
-    "forge": "./forge.config.js"
+  "scripts": {
+    "dev": "electron-webpack dev",
+    "compile": "electron-webpack",
+    "dist": "yarn compile && electron-builder",
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+    "lint": "eslint --ext .ts ."
+  },
+  "electronWebpack": {
+    "renderer": {
+      "sourceDirectory": null
+    }
+  },
+  "build": {
+    "appId": "io.put.sync",
+    "productName": "Putio Sync",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "extendInfo": {
+        "LSUIElement": 1
+      }
+    }
   },
   "dependencies": {
-    "axios": "^0.20.0",
     "electron-squirrel-startup": "^1.0.0",
-    "get-port": "^5.1.1",
-    "tar-stream": "^2.1.3"
+    "get-port": "^5.1.1"
   },
   "devDependencies": {
-    "@electron-forge/cli": "6.0.0-beta.52",
-    "@electron-forge/maker-dmg": "^6.0.0-beta.53",
-    "@electron-forge/maker-squirrel": "6.0.0-beta.52",
-    "@electron-forge/maker-zip": "6.0.0-beta.52",
+    "@types/node": "^12",
     "@typescript-eslint/eslint-plugin": "^3.10.1",
-    "@typescript-eslint/parser": "^2.18.0",
-    "electron": "10.0.0",
+    "@typescript-eslint/parser": "^3.10.1",
+    "electron": "^10.0.0",
+    "electron-builder": "^22.4.1",
+    "electron-webpack": "^2.8.2",
+    "electron-webpack-ts": "^4.0.1",
     "eslint": "^7.7.0",
-    "eslint-plugin-import": "^2.20.0",
-    "typescript": "^3.7.0"
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "typescript": "^3",
+    "webpack": "~4.42.1"
   }
 }
