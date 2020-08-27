@@ -25,6 +25,9 @@ jobs:
       - name: Run linter
         run: yarn lint
 
+      - name: Compile Webpack
+        run: electron-webpack
+
       - name: Download putio-sync binary
         run: yarn run downloadBinary
 
