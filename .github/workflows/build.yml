@@ -19,11 +19,11 @@ jobs:
         with:
           node-version: 10
 
+      - name: Print env
+        run: env
+
       - name: Install dependencies
-        run: |
-          ls -al
-          tree
-          yarn install --json
+        run: yarn install
 
       - name: Run linter
         run: yarn lint
