@@ -13,7 +13,7 @@
     "dist": "yarn compile && electron-builder",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
     "lint": "eslint --ext .ts .",
-    "bin": "node downloadBinary"
+    "downloadBinary": "node downloadBinary"
   },
   "electronWebpack": {
     "renderer": {
