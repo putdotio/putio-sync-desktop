@@ -33,7 +33,8 @@
   "dependencies": {
     "electron-log": "^4.2.4",
     "electron-squirrel-startup": "^1.0.0",
-    "get-port": "^5.1.1"
+    "get-port": "^5.1.1",
+    "source-map-support": "^0.5.19"
   },
   "devDependencies": {
     "@types/node": "^12",
