@@ -8,17 +8,17 @@ const tar = require('tar-stream')
 const putioSyncVersion = '2.0.22'
 const putioSyncURL = `https://github.com/putdotio/putio-sync/releases/download/v${putioSyncVersion}/putio-sync_${putioSyncVersion}_macos_x86_64.tar.gz`
 
-async function downloadFileFromTarGZ (url, dest, filename) {
+async function downloadFileFromTarGZ (url: string, dest: string, filename: string) {
   const writer = fs.createWriteStream(dest)
   const extract = tar.extract()
   let found = false
-  extract.on('entry', function (header, stream, cb) {
+  extract.on('entry', function (header: any, stream: any, next: Function) {
     if (header.name !== filename) {
-      cb()
+      next()
       return
     }
     found = true
-    writer.on('finish', cb)
+    writer.on('finish', next)
     stream.pipe(writer)
   })
   const response = await axios({ url, method: 'GET', responseType: 'stream' })
