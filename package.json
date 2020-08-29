@@ -1,5 +1,5 @@
 {
-  "name": "putio-sync",
+  "name": "putio-sync-desktop",
   "description": "Sync a folder between put.io and your computer",
   "version": "1.0.2",
   "license": "MIT",
@@ -20,7 +20,7 @@
     }
   },
   "build": {
-    "appId": "io.put.sync",
+    "appId": "io.put.sync.desktop",
     "productName": "Putio Sync",
     "mac": {
       "category": "public.app-category.productivity",
@@ -30,6 +30,7 @@
     }
   },
   "dependencies": {
+    "electron-log": "^4.2.4",
     "electron-squirrel-startup": "^1.0.0",
     "get-port": "^5.1.1"
   },
