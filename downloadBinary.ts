@@ -57,9 +57,11 @@ async function downloadFileFromZip (url: string, dest: string, filename: string)
   await mkdir(binPath, { recursive: true })
   const repo = 'putdotio/putio-sync'
   const version = await getLatestBinaryVersion(repo)
+  console.log(`Downloading putio-sync binary version ${version}`)
   switch (os.platform()) {
     case 'darwin': {
       const url = `https://github.com/${repo}/releases/download/v${version}/putio-sync_${version}_macos_x86_64.tar.gz`
+      console.log(`Downloading url: ${url}`)
       const target = path.join(binPath, 'putio-sync')
       await downloadFileFromTarGZ(url, target, 'putio-sync')
       const chmod = util.promisify(fs.chmod)
@@ -68,6 +70,7 @@ async function downloadFileFromZip (url: string, dest: string, filename: string)
     }
     case 'win32': {
       const url = `https://github.com/${repo}/releases/download/v${version}/putio-sync_${version}_windows_x86_64.zip`
+      console.log(`Downloading url: ${url}`)
       const target = path.join(binPath, 'putio-sync.exe')
       await downloadFileFromZip(url, target, 'putio-sync.exe')
       break
