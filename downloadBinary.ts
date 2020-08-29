@@ -10,8 +10,13 @@ const unzipper = require('unzipper')
 async function getLatestBinaryVersion (repo: string): Promise<string> {
   const releasesURL = `https://api.github.com/repos/${repo}/releases`
   console.log(`Getting latest release from: ${releasesURL}`)
-  const response = await axios.get(releasesURL)
-  return response.data[0].tag_name.substr(1)
+  try {
+    const response = await axios.get(releasesURL)
+    return response.data[0].tag_name.substr(1)
+  } catch (error) {
+    console.log(error.response)
+    return ''
+  }
 }
 
 async function downloadFileFromTarGZ (url: string, dest: string, filename: string) {
