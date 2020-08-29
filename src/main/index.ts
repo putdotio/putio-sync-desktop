@@ -1,4 +1,4 @@
-import { app, Menu, Tray, net } from 'electron'
+import { app, Menu, Tray, net, shell } from 'electron'
 import * as path from 'path'
 import { spawn } from 'child_process'
 import * as getPort from 'get-port'
@@ -12,10 +12,12 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 declare var __static: string
 const iconPath = path.join(__static, 'img', 'IconTemplate.png')
 const host = '127.0.0.1'
+const logPath = log.transports.file.getFile().path
 
 function createMenu (syncStatus: string) {
   return Menu.buildFromTemplate([
     { label: syncStatus, id: 'syncStatus', enabled: false },
+    { label: 'Open log file', click: () => { shell.openPath(logPath) } },
     { label: 'Quit', role: 'quit' }
   ])
 }
