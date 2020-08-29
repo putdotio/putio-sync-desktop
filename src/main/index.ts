@@ -3,6 +3,7 @@ import * as path from 'path'
 import { spawn } from 'child_process'
 import * as getPort from 'get-port'
 import * as log from 'electron-log'
+import * as os from 'os'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -13,6 +14,11 @@ declare var __static: string
 const iconPath = path.join(__static, 'img', 'IconTemplate.png')
 const host = '127.0.0.1'
 const logPath = log.transports.file.getFile().path
+const binPath = path.join(__static, 'bin')
+var exe = 'putio-sync'
+if (os.platform() === 'win32') {
+  exe += '.exe'
+}
 
 function createMenu (syncStatus: string) {
   return Menu.buildFromTemplate([
@@ -26,7 +32,7 @@ app.on('ready', () => {
   const tray = new Tray(iconPath)
   tray.setContextMenu(createMenu('Starting to sync...'))
   getPort({ host: host }).then(port => {
-    const ls = spawn(path.join(__static, 'bin', 'putio-sync'), ['-repeat', '10s', '-server', host + ':' + port], { stdio: ['ignore', 'ignore', 'pipe'] })
+    const ls = spawn(path.join(binPath, exe), ['-repeat', '10s', '-server', host + ':' + port], { stdio: ['ignore', 'ignore', 'pipe'] })
     ls.stderr.on('data', (data) => { log.info(String(data).trim()) })
     ls.on('close', (code) => { log.error(`child process exited with code ${code}`) })
     setInterval(() => {
