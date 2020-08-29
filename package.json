@@ -1,7 +1,7 @@
 {
   "name": "putio-sync-desktop",
   "description": "Sync a folder between put.io and your computer",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "license": "MIT",
   "author": {
     "name": "Cenk Alti",
@@ -12,7 +12,8 @@
     "compile": "electron-webpack",
     "dist": "yarn compile && electron-builder",
     "lint": "eslint --ext .ts .",
-    "downloadBinary": "ts-node downloadBinary"
+    "downloadBinary": "ts-node downloadBinary",
+    "build": "yarn compile && yarn downloadBinary"
   },
   "electronWebpack": {
     "renderer": {
