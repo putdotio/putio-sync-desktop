@@ -5,8 +5,11 @@ const util = require('util')
 const zlib = require('zlib')
 const tar = require('tar-stream')
 
-const putioSyncVersion = '2.0.22'
-const putioSyncURL = `https://github.com/putdotio/putio-sync/releases/download/v${putioSyncVersion}/putio-sync_${putioSyncVersion}_macos_x86_64.tar.gz`
+async function getLatestBinaryVersion (repo: string): Promise<string> {
+  const releasesURL = `https://api.github.com/repos/${repo}/releases`
+  const response = await axios.get(releasesURL)
+  return response.data[0].tag_name.substr(1)
+}
 
 async function downloadFileFromTarGZ (url: string, dest: string, filename: string) {
   const writer = fs.createWriteStream(dest)
@@ -37,6 +40,9 @@ async function downloadFileFromTarGZ (url: string, dest: string, filename: strin
   const mkdir = util.promisify(fs.mkdir)
   await mkdir(path.join('static', 'bin'), { recursive: true })
   const binPath = path.join('static', 'bin', 'putio-sync')
+  const binaryRepo = 'putdotio/putio-sync'
+  const putioSyncVersion = await getLatestBinaryVersion(binaryRepo)
+  const putioSyncURL = `https://github.com/putdotio/putio-sync/releases/download/v${putioSyncVersion}/putio-sync_${putioSyncVersion}_macos_x86_64.tar.gz`
   await downloadFileFromTarGZ(putioSyncURL, binPath, 'putio-sync')
   const chmod = util.promisify(fs.chmod)
   await chmod(binPath, 0o775)
