@@ -24,6 +24,7 @@ function createMenu (syncStatus: string) {
   return Menu.buildFromTemplate([
     { label: syncStatus, id: 'syncStatus', enabled: false },
     { label: 'Open log file', click: () => { shell.openPath(logPath) } },
+    { label: 'Restart', click: () => { app.relaunch(); app.exit() } },
     { label: 'Quit', role: 'quit' }
   ])
 }

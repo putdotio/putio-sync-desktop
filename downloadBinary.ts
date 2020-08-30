@@ -67,7 +67,7 @@ async function downloadFileFromZip (url: string, dest: string, filename: string)
   await mkdir(binPath, { recursive: true })
   const repo = 'putdotio/putio-sync'
   const version = await getLatestBinaryVersion(repo)
-  console.log(`Downloading putio-sync binary version ${version}`)
+  console.log(`Downloading putio-sync binary version: ${version}`)
   switch (os.platform()) {
     case 'darwin': {
       const url = `https://github.com/${repo}/releases/download/v${version}/putio-sync_${version}_macos_x86_64.tar.gz`
