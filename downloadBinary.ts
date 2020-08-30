@@ -15,13 +15,12 @@ process.on('unhandledRejection', (reason, p) => {
 async function getLatestBinaryVersion (repo: string): Promise<string> {
   const releasesURL = `https://api.github.com/repos/${repo}/releases`
   console.log(`Getting latest release from: ${releasesURL}`)
-  try {
-    const response = await axios.get(releasesURL)
-    return response.data[0].tag_name.substr(1)
-  } catch (error) {
-    console.log(error.response)
-    return ''
+  const headers: any = {}
+  if (process.env.GITHUB_TOKEN) {
+    headers.authorization = 'token ' + process.env.GITHUB_TOKEN
   }
+  const response = await axios.get(releasesURL, { headers })
+  return response.data[0].tag_name.substr(1)
 }
 
 async function downloadFileFromTarGZ (url: string, dest: string, filename: string) {
