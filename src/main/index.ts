@@ -1,6 +1,6 @@
 import { app, Menu, Tray, net, shell } from 'electron'
 import * as path from 'path'
-import { spawn } from 'child_process'
+import { spawn, spawnSync } from 'child_process'
 import * as getPort from 'get-port'
 import * as log from 'electron-log'
 import * as os from 'os'
@@ -20,9 +20,16 @@ if (os.platform() === 'win32') {
   exe += '.exe'
 }
 
+function openConfig () {
+  const child = spawnSync(path.join(binPath, exe), ['-print-config-path'])
+  const configPath = String(child.stdout).trim()
+  shell.openPath(configPath)
+}
+
 function createMenu (syncStatus: string) {
   return Menu.buildFromTemplate([
     { label: syncStatus, id: 'syncStatus', enabled: false },
+    { label: 'Open config file', click: openConfig },
     { label: 'Open log file', click: () => { shell.openPath(logPath) } },
     { label: 'Restart', click: () => { app.relaunch(); app.exit() } },
     { label: 'Quit', role: 'quit' }
@@ -33,9 +40,9 @@ app.on('ready', () => {
   const tray = new Tray(iconPath)
   tray.setContextMenu(createMenu('Starting to sync...'))
   getPort({ host: host }).then(port => {
-    const ls = spawn(path.join(binPath, exe), ['-repeat', '10s', '-server', host + ':' + port], { stdio: ['ignore', 'ignore', 'pipe'] })
-    ls.stderr.on('data', (data) => { log.info(String(data).trim()) })
-    ls.on('close', (code) => { log.error(`child process exited with code ${code}`) })
+    const child = spawn(path.join(binPath, exe), ['-repeat', '1m', '-server', host + ':' + port], { stdio: ['ignore', 'ignore', 'pipe'] })
+    child.stderr.on('data', (data) => { log.info(String(data).trim()) })
+    child.on('close', (code) => { log.error(`child process exited with code ${code}`) })
     setInterval(() => {
       const statusURL = `http://${host}:${port}/status`
       const request = net.request(statusURL)
