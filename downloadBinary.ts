@@ -7,6 +7,11 @@ const zlib = require('zlib')
 const tar = require('tar-stream')
 const unzipper = require('unzipper')
 
+process.on('unhandledRejection', (reason, p) => {
+  console.error('Unhandled Rejection at:', p, 'reason:', reason)
+  process.exit(1)
+})
+
 async function getLatestBinaryVersion (repo: string): Promise<string> {
   const releasesURL = `https://api.github.com/repos/${repo}/releases`
   console.log(`Getting latest release from: ${releasesURL}`)
