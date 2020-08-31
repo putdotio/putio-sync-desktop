@@ -25,7 +25,11 @@
     "appId": "io.put.sync.desktop",
     "productName": "Putio Sync",
     "mac": {
-      "hardenedRuntime": true
+      "category": "public.app-category.productivity",
+      "hardenedRuntime": true,
+      "extendInfo": {
+        "LSUIElement": 1
+      }
     },
     "afterSign": "electron-builder-notarize"
   },
