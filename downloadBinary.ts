@@ -71,7 +71,7 @@ async function downloadFileFromZip (url: string, dest: string, filename: string)
   switch (os.platform()) {
     case 'darwin': {
       const url = `https://github.com/${repo}/releases/download/v${version}/putio-sync_${version}_macos_x86_64.tar.gz`
-      console.log(`Downloading url: ${url}`)
+      console.log(`Downloading URL: ${url}`)
       const target = path.join(binPath, 'putio-sync')
       await downloadFileFromTarGZ(url, target, 'putio-sync')
       const chmod = util.promisify(fs.chmod)
@@ -80,7 +80,7 @@ async function downloadFileFromZip (url: string, dest: string, filename: string)
     }
     case 'win32': {
       const url = `https://github.com/${repo}/releases/download/v${version}/putio-sync_${version}_windows_x86_64.zip`
-      console.log(`Downloading url: ${url}`)
+      console.log(`Downloading URL: ${url}`)
       const target = path.join(binPath, 'putio-sync.exe')
       await downloadFileFromZip(url, target, 'putio-sync.exe')
       break
