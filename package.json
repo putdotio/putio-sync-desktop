@@ -34,8 +34,7 @@
       "extendInfo": {
         "LSUIElement": 1
       }
-    },
-    "afterSign": "electron-builder-notarize"
+    }
   },
   "dependencies": {
     "electron-log": "^4.2.4",
