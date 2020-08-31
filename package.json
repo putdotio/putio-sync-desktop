@@ -24,6 +24,7 @@
   "build": {
     "appId": "io.put.sync.desktop",
     "productName": "Putio Sync",
+    "copyright": "Copyright © 2020 Putio Internet Hizmetleri AS",
     "mac": {
       "category": "public.app-category.productivity",
       "hardenedRuntime": true,
