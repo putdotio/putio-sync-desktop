@@ -25,6 +25,13 @@ jobs:
       - name: Run linter
         run: yarn lint
 
+      - name: Prepare for app notarization
+        if: startsWith(matrix.os, 'macos')
+        # Import Apple API key for app notarization on macOS
+        run: |
+          mkdir -p ~/private_keys/
+          echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
+
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
@@ -34,3 +41,6 @@ jobs:
           mac_certs_password: ${{ secrets.mac_certs_password }}
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
+          # macOS notarization API key
+          API_KEY_ID: ${{ secrets.api_key_id }}
+          API_KEY_ISSUER_ID: ${{ secrets.api_key_issuer_id }}

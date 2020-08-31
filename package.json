@@ -28,6 +28,10 @@
       "extendInfo": {
         "LSUIElement": 1
       }
+    },
+    "afterSign": "electron-builder-notarize",
+    "mac": {
+        "hardenedRuntime": true
     }
   },
   "dependencies": {
@@ -43,6 +47,7 @@
     "axios": "^0.20.0",
     "electron": "^10.0.0",
     "electron-builder": "^22.4.1",
+    "electron-builder-notarize": "^1.2.0",
     "electron-webpack": "^2.8.2",
     "electron-webpack-ts": "^4.0.1",
     "eslint": "^7.7.0",
