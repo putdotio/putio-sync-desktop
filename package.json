@@ -1,7 +1,7 @@
 {
   "name": "putio-sync-desktop",
   "description": "Sync a folder between put.io and your computer",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "license": "MIT",
   "author": {
     "name": "Cenk Alti",
@@ -13,7 +13,8 @@
     "dist": "yarn compile && electron-builder",
     "lint": "eslint --ext .ts .",
     "downloadBinary": "ts-node downloadBinary",
-    "build": "yarn compile && yarn downloadBinary"
+    "build": "yarn compile && yarn downloadBinary",
+    "release": "yarn version --patch && git push --follow-tags"
   },
   "electronWebpack": {
     "renderer": {
@@ -24,15 +25,9 @@
     "appId": "io.put.sync.desktop",
     "productName": "Putio Sync",
     "mac": {
-      "category": "public.app-category.productivity",
-      "extendInfo": {
-        "LSUIElement": 1
-      }
+      "hardenedRuntime": true
     },
-    "afterSign": "electron-builder-notarize",
-    "mac": {
-        "hardenedRuntime": true
-    }
+    "afterSign": "electron-builder-notarize"
   },
   "dependencies": {
     "electron-log": "^4.2.4",
