@@ -28,7 +28,7 @@
     "productName": "Putio Sync",
     "copyright": "Copyright © 2020 Putio Internet Hizmetleri AS",
     "mac": {
-      "target": "dmg",
+      "target": "zip",
       "category": "public.app-category.productivity",
       "hardenedRuntime": true,
       "extendInfo": {
