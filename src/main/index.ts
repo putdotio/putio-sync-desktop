@@ -28,7 +28,7 @@ const authURL = 'https://api.put.io/v2/oauth2/authenticate?response_type=token&c
 const exe = os.platform() === 'win32' ? 'putio-sync.exe' : 'putio-sync'
 const configPath = String(spawnSync(path.join(binPath, exe), ['-print-config-path']).stdout).trim()
 
-console.log(`Settings file: ${settings.file()}`)
+log.info(`Settings file: ${settings.file()}`)
 
 async function openConfig () {
   // shell.openPath does not work if target does not exist
