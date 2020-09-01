@@ -148,7 +148,9 @@ app.on('ready', () => {
   startApp()
   if (isProduction) {
     autoUpdater.checkForUpdatesAndNotify()
-    setTimeout(autoUpdater.checkForUpdatesAndNotify, 3600)
+    setTimeout(() => {
+      autoUpdater.checkForUpdatesAndNotify()
+    }, 3600)
   }
 })
 
