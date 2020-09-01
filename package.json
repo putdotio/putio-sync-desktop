@@ -31,7 +31,6 @@
       "target": "dmg",
       "category": "public.app-category.productivity",
       "hardenedRuntime": true,
-      "gatekeeperAssess": false,
       "extendInfo": {
         "LSUIElement": 1
       }
