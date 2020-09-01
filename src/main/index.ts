@@ -7,6 +7,11 @@ import * as os from 'os'
 import * as fs from 'fs'
 import settings from 'electron-settings'
 
+process.on('unhandledRejection', (reason, p) => {
+  log.error('Unhandled Rejection at:', p, 'reason:', reason)
+  process.exit(1)
+})
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit()
