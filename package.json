@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "electron-webpack dev",
     "compile": "electron-webpack",
-    "dist": "yarn compile && electron-builder",
+    "dist": "yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder",
     "lint": "eslint --ext .ts .",
     "downloadBinary": "ts-node downloadBinary",
     "build": "yarn compile && yarn downloadBinary",
