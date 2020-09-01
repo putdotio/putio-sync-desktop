@@ -120,7 +120,13 @@ app.on('ready', () => {
         }
         case exitCodeAuthenticationError: {
           const window = new BrowserWindow()
-          window.on('closed', startApp)
+          var gotToken = false
+          window.on('closed', () => {
+            if (gotToken) {
+              startApp()
+            }
+            app.quit()
+          })
           await window.webContents.session.clearStorageData()
           window.webContents.on('will-redirect', async (event, url) => {
             if (url.startsWith('http://localhost')) {
@@ -128,6 +134,7 @@ app.on('ready', () => {
               const parsedHash = new URLSearchParams(url.split('#', 2)[1])
               const token = parsedHash.get('access_token')
               await settings.set('token', token)
+              gotToken = true
               window.close()
             }
           })
