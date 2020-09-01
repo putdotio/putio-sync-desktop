@@ -36,9 +36,15 @@ async function openConfig () {
   await shell.openPath(configPath)
 }
 
+function onAutoLaunchClick (menuItem: any) {
+  app.setLoginItemSettings({ openAtLogin: menuItem.checked })
+  menuItem.checked = !menuItem.checked
+}
+
 function createMenu (syncStatus: string) {
   return Menu.buildFromTemplate([
     { label: syncStatus, id: 'syncStatus', enabled: false },
+    { label: 'Launch on startup', id: 'autoLaunch', type: 'checkbox', checked: app.getLoginItemSettings().openAtLogin, click: onAutoLaunchClick },
     // { label: 'Open config file', click: openConfig },
     { label: 'Open log file', click: () => { shell.openPath(logPath) } },
     { label: 'Logout', click: async () => { await settings.unset('token'); app.quit() } },
