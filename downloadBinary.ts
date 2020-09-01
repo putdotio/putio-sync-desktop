@@ -16,8 +16,8 @@ async function getLatestBinaryVersion (repo: string): Promise<string> {
   const releasesURL = `https://api.github.com/repos/${repo}/releases`
   console.log(`Getting latest release from: ${releasesURL}`)
   const headers: any = {}
-  if (process.env.GITHUB_TOKEN) {
-    headers.authorization = 'token ' + process.env.GITHUB_TOKEN
+  if (process.env.GH_TOKEN) {
+    headers.authorization = 'token ' + process.env.GH_TOKEN
   }
   const response = await axios.get(releasesURL, { headers })
   return response.data[0].tag_name.substr(1)
