@@ -54,5 +54,13 @@ jobs:
           echo '::set-env name=API_KEY_ISSUER_ID::'${{ secrets.api_key_issuer_id }}
           mkdir -p ~/private_keys/ && echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
 
+      - name: Extract version
+        id: version
+        uses: actions/github-script@0.2.0
+        with:
+          github-token: ${{ secrets.github_token }}
+          script: |
+            return context.payload.ref.replace(/\/refs\/tags\/v/, '');
+
       - name: Build and release Electron app
-        run: yarn run electron-builder --${{ matrix.platform }} --publish onTag -c.extraMetadata.version=$(echo ${{ github.ref }} | cut -d / -f 3 | tr -d v)
+        run: yarn run electron-builder --${{ matrix.platform }} --publish onTag -c.extraMetadata.version=${{ steps.version.outputs.result }}
