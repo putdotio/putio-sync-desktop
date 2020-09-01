@@ -47,7 +47,7 @@ jobs:
         run: |
           # for signing
           echo '::set-env name=CSC_LINK::'${{ secrets.mac_certs }}
-          echo '::set-env name=CSC_KEY::'${{ secrets.mac_certs_password }}
+          echo '::set-env name=CSC_KEY_PASSWORD::'${{ secrets.mac_certs_password }}
 
           # for notarization
           echo '::set-env name=API_KEY_ID::'${{ secrets.api_key_id }}
