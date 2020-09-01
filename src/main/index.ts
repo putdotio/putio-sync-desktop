@@ -121,12 +121,7 @@ app.on('ready', () => {
         case exitCodeAuthenticationError: {
           const window = new BrowserWindow()
           var gotToken = false
-          window.on('closed', () => {
-            if (gotToken) {
-              startApp()
-            }
-            app.quit()
-          })
+          window.on('closed', () => { gotToken ? startApp() : app.quit() })
           await window.webContents.session.clearStorageData()
           window.webContents.on('will-redirect', async (event, url) => {
             if (url.startsWith('http://localhost')) {
