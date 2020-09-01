@@ -3,7 +3,7 @@
   "description": "Sync a folder between put.io and your computer",
   "homepage": "https://put.io",
   "repository": "github:putdotio/putio-sync-desktop",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "license": "MIT",
   "author": {
     "name": "Cenk Alti",
