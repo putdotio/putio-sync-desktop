@@ -56,7 +56,7 @@ jobs:
 
       - name: Extract version
         id: version
-        uses: actions/github-script@0.2.0
+        uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.github_token }}
           script: |
