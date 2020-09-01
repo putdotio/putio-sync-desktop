@@ -1,6 +1,8 @@
 {
   "name": "putio-sync-desktop",
   "description": "Sync a folder between put.io and your computer",
+  "homepage": "https://put.io",
+  "repository": "github:putdotio/putio-sync-desktop",
   "version": "1.0.20",
   "license": "MIT",
   "author": {
@@ -38,6 +40,7 @@
   },
   "dependencies": {
     "electron-log": "^4.2.4",
+    "electron-settings": "^4.0.2",
     "electron-squirrel-startup": "^1.0.0",
     "get-port": "^5.1.1",
     "source-map-support": "^0.5.19"
