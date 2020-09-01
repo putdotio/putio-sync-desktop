@@ -146,7 +146,10 @@ app.on('ready', () => {
   }
 
   startApp()
-  if (isProduction) autoUpdater.checkForUpdatesAndNotify()
+  if (isProduction) {
+    autoUpdater.checkForUpdatesAndNotify()
+    setTimeout(autoUpdater.checkForUpdatesAndNotify, 3600)
+  }
 })
 
 autoUpdater.logger = log
