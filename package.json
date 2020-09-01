@@ -35,12 +35,17 @@
         "LSUIElement": 1
       }
     },
-    "afterSign": "electron-builder-notarize"
+    "afterSign": "electron-builder-notarize",
+    "publish": {
+      "provider": "github",
+      "releaseType": "release"
+    }
   },
   "dependencies": {
     "electron-log": "^4.2.4",
     "electron-settings": "^4.0.2",
     "electron-squirrel-startup": "^1.0.0",
+    "electron-updater": "^4.3.4",
     "get-port": "^5.1.1",
     "source-map-support": "^0.5.19"
   },

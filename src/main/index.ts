@@ -6,6 +6,7 @@ import * as log from 'electron-log'
 import * as os from 'os'
 import * as fs from 'fs'
 import settings from 'electron-settings'
+import { autoUpdater } from 'electron-updater'
 
 process.on('unhandledRejection', (reason, p) => {
   log.error('Unhandled Rejection at:', p, 'reason:', reason)
@@ -27,6 +28,7 @@ const exitCodeAuthenticationError = 11
 const authURL = 'https://api.put.io/v2/oauth2/authenticate?response_type=token&client_id=4785&redirect_uri=http%3A%2F%2Flocalhost'
 const exe = os.platform() === 'win32' ? 'putio-sync.exe' : 'putio-sync'
 const configPath = String(spawnSync(path.join(binPath, exe), ['-print-config-path']).stdout).trim()
+const isProduction = process.env.NODE_ENV === 'production'
 
 log.info(`Settings file: ${settings.file()}`)
 
@@ -57,7 +59,7 @@ function createMenu (syncStatus: string) {
 app.on('window-all-closed', () => {})
 
 app.on('ready', () => {
-  if (!settings.getSync('setAutoLaunch')) {
+  if (isProduction && !settings.getSync('setAutoLaunch')) {
     log.info('First run of the application. Setting app to launch on login.')
     app.setLoginItemSettings({ openAtLogin: true })
     settings.set('setAutoLaunch', true)
@@ -93,7 +95,7 @@ app.on('ready', () => {
 
     const token = await settings.get('token')
     const child = spawn(path.join(binPath, exe), ['-repeat', '1m', '-server', host + ':' + port, '-password', `token/${token}`], { stdio: ['ignore', 'ignore', 'pipe'] })
-    app.once('quit', () => { child.kill('SIGKILL') })
+    app.once('before-quit', () => { child.kill('SIGKILL') })
     var lastStderrLine = ''
     child.stderr.on('data', (data) => {
       lastStderrLine = String(data).trim()
@@ -144,4 +146,24 @@ app.on('ready', () => {
   }
 
   startApp()
+  if (isProduction) autoUpdater.checkForUpdatesAndNotify()
+})
+
+autoUpdater.logger = log
+
+autoUpdater.on('error', (error) => {
+  log.error(error == null ? 'unknown' : (error.stack || error).toString())
+})
+
+autoUpdater.on('update-available', async () => {
+  log.info('Update available.')
+})
+
+autoUpdater.on('update-not-available', () => {
+  log.info('Current version is up-to-date.')
+})
+
+autoUpdater.on('update-downloaded', () => {
+  log.info('Update downloaded, application will be quit for update.')
+  autoUpdater.quitAndInstall(true, true)
 })
