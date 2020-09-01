@@ -55,12 +55,9 @@ jobs:
           mkdir -p ~/private_keys/ && echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
 
       - name: Extract version
-        id: version
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{ secrets.github_token }}
-          script: |
-            return context.payload.ref.split('/').reverse()[0].replace(/^v/, '')
+        id: extract_version
+        run: echo ::set-output name=VERSION::$(echo ${{ github.ref }} | cut -d / -f 3 | tr -d v)
+        shell: bash
 
       - name: Build and release Electron app
-        run: yarn run electron-builder --${{ matrix.platform }} --publish onTag --config.extraMetadata.version=${{ steps.version.outputs.result }}
+        run: yarn run electron-builder --${{ matrix.platform }} --publish onTag --config.extraMetadata.version=${{ steps.extract_version.outputs.VERSION }}
