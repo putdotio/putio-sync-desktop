@@ -37,8 +37,8 @@ async function openConfig () {
 }
 
 function onAutoLaunchClick (menuItem: any) {
+  console.log(`is auto-launch menu item checked: ${menuItem.checked}`)
   app.setLoginItemSettings({ openAtLogin: menuItem.checked })
-  menuItem.checked = !menuItem.checked
 }
 
 function createMenu (syncStatus: string) {
@@ -57,6 +57,12 @@ function createMenu (syncStatus: string) {
 app.on('window-all-closed', () => {})
 
 app.on('ready', () => {
+  if (!settings.getSync('setAutoLaunch')) {
+    log.info('First run of the application. Setting app to launch on login.')
+    app.setLoginItemSettings({ openAtLogin: true })
+    settings.set('setAutoLaunch', true)
+  }
+
   const tray = new Tray(iconPath)
   tray.setContextMenu(createMenu('Starting to sync...'))
 
