@@ -147,22 +147,26 @@ app.on('ready', () => {
 
   startApp()
   if (isProduction) {
-    autoUpdater.checkForUpdatesAndNotify()
+    checkUpdate()
     setTimeout(() => {
-      autoUpdater.checkForUpdatesAndNotify()
-    }, 3600)
+      checkUpdate()
+    }, 10 * 60 * 1000)
   }
 })
 
+let checkingUpdate = false
+function checkUpdate () {
+  if (checkingUpdate) {
+    return
+  }
+  checkingUpdate = true
+  autoUpdater.checkForUpdatesAndNotify()
+}
+
 autoUpdater.logger = log
-autoUpdater.on('error', (err) => { log.error(err === null ? 'unknown updater error' : (err.stack || err).toString()) })
+autoUpdater.on('error', (err) => { log.error(err === null ? 'unknown updater error' : (err.stack || err).toString()); checkingUpdate = false })
 autoUpdater.on('checking-for-update', () => { log.info('Checking for update...') })
 autoUpdater.on('update-available', () => { log.info('Update available.') })
-autoUpdater.on('update-not-available', () => { log.info('Current version is up-to-date.') })
+autoUpdater.on('update-not-available', () => { log.info('Current version is up-to-date.'); checkingUpdate = false })
 autoUpdater.on('update-downloaded', () => { log.info('Update downloaded, application will be quit for update.') })
-autoUpdater.on('download-progress', (progressObj) => {
-  let msg = 'Download speed: ' + progressObj.bytesPerSecond
-  msg = msg + ' - Downloaded ' + progressObj.percent + '%'
-  msg = msg + ' (' + progressObj.transferred + '/' + progressObj.total + ')'
-  log.info(msg)
-})
+autoUpdater.on('download-progress', (progressObj) => { log.info(`Update download speed: ${progressObj.bytesPerSecond / 1024} KBps, downloaded ${progressObj.percent} % (${progressObj.transferred}/${progressObj.total})`) })
