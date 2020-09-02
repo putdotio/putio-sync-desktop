@@ -29,6 +29,8 @@ const authURL = 'https://api.put.io/v2/oauth2/authenticate?response_type=token&c
 const exe = os.platform() === 'win32' ? 'putio-sync.exe' : 'putio-sync'
 const configPath = String(spawnSync(path.join(binPath, exe), ['-print-config-path']).stdout).trim()
 const isProduction = process.env.NODE_ENV === 'production'
+var isLoginWindowOpen = false
+var pendingUpdate = false
 
 log.info(`Settings file: ${settings.file()}`)
 
@@ -121,9 +123,17 @@ app.on('ready', () => {
           break
         }
         case exitCodeAuthenticationError: {
+          isLoginWindowOpen = true
           const window = new BrowserWindow()
           var gotToken = false
-          window.on('closed', () => { gotToken ? startApp() : app.quit() })
+          window.on('closed', () => {
+            isLoginWindowOpen = false
+            if (pendingUpdate) {
+              autoUpdater.quitAndInstall(true, true)
+            } else {
+              gotToken ? startApp() : app.quit()
+            }
+          })
           await window.webContents.session.clearStorageData()
           window.webContents.on('will-redirect', async (event, url) => {
             if (url.startsWith('http://localhost')) {
@@ -164,9 +174,22 @@ function checkUpdate () {
 }
 
 autoUpdater.logger = log
-autoUpdater.on('error', (err) => { log.error(err === null ? 'unknown updater error' : (err.stack || err).toString()); checkingUpdate = false })
+autoUpdater.on('error', (err) => {
+  log.error(err === null ? 'unknown updater error' : (err.stack || err).toString())
+  checkingUpdate = false
+})
 autoUpdater.on('checking-for-update', () => { log.info('Checking for update...') })
 autoUpdater.on('update-available', () => { log.info('Update available.') })
-autoUpdater.on('update-not-available', () => { log.info('Current version is up-to-date.'); checkingUpdate = false })
-autoUpdater.on('update-downloaded', () => { log.info('Update downloaded, application will be quit for update.'); autoUpdater.quitAndInstall(true, true) })
+autoUpdater.on('update-not-available', () => {
+  log.info('Current version is up-to-date.')
+  checkingUpdate = false
+})
+autoUpdater.on('update-downloaded', () => {
+  log.info('Update downloaded, application will be quit for update.')
+  if (isLoginWindowOpen) {
+    pendingUpdate = true
+  } else {
+    autoUpdater.quitAndInstall(true, true)
+  }
+})
 autoUpdater.on('download-progress', (progressObj) => { log.info(`Update download speed: ${(progressObj.bytesPerSecond / 1024).toFixed()} KBps, downloaded: ${progressObj.percent.toFixed(2)} %`) })
