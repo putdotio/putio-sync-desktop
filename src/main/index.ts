@@ -155,24 +155,14 @@ app.on('ready', () => {
 })
 
 autoUpdater.logger = log
-
-autoUpdater.on('error', (error) => {
-  if (error === null) {
-    log.error('unknown updater error')
-  } else {
-    log.error((error.stack || error).toString())
-  }
-})
-
-autoUpdater.on('update-available', async () => {
-  log.info('Update available.')
-})
-
-autoUpdater.on('update-not-available', () => {
-  log.info('Current version is up-to-date.')
-})
-
-autoUpdater.on('update-downloaded', () => {
-  log.info('Update downloaded, application will be quit for update.')
-  autoUpdater.quitAndInstall(true, true)
+autoUpdater.on('error', (err) => { log.error(err === null ? 'unknown updater error' : (err.stack || err).toString()) })
+autoUpdater.on('checking-for-update', () => { log.info('Checking for update...') })
+autoUpdater.on('update-available', () => { log.info('Update available.') })
+autoUpdater.on('update-not-available', () => { log.info('Current version is up-to-date.') })
+autoUpdater.on('update-downloaded', () => { log.info('Update downloaded, application will be quit for update.') })
+autoUpdater.on('download-progress', (progressObj) => {
+  let msg = 'Download speed: ' + progressObj.bytesPerSecond
+  msg = msg + ' - Downloaded ' + progressObj.percent + '%'
+  msg = msg + ' (' + progressObj.transferred + '/' + progressObj.total + ')'
+  log.info(msg)
 })
