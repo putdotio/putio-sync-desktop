@@ -160,7 +160,7 @@ function checkUpdate () {
     return
   }
   checkingUpdate = true
-  autoUpdater.checkForUpdatesAndNotify()
+  autoUpdater.checkForUpdates()
 }
 
 autoUpdater.logger = log
@@ -168,5 +168,5 @@ autoUpdater.on('error', (err) => { log.error(err === null ? 'unknown updater err
 autoUpdater.on('checking-for-update', () => { log.info('Checking for update...') })
 autoUpdater.on('update-available', () => { log.info('Update available.') })
 autoUpdater.on('update-not-available', () => { log.info('Current version is up-to-date.'); checkingUpdate = false })
-autoUpdater.on('update-downloaded', () => { log.info('Update downloaded, application will be quit for update.') })
-autoUpdater.on('download-progress', (progressObj) => { log.info(`Update download speed: ${progressObj.bytesPerSecond / 1024} KBps, downloaded ${progressObj.percent} % (${progressObj.transferred}/${progressObj.total})`) })
+autoUpdater.on('update-downloaded', () => { log.info('Update downloaded, application will be quit for update.'); autoUpdater.quitAndInstall(true, true) })
+autoUpdater.on('download-progress', (progressObj) => { log.info(`Update download speed: ${(progressObj.bytesPerSecond / 1024).toFixed()} KBps, downloaded: ${progressObj.percent.toFixed(2)} %`) })
