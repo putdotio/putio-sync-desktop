@@ -125,6 +125,7 @@ app.on('ready', () => {
         case exitCodeAuthenticationError: {
           isLoginWindowOpen = true
           const window = new BrowserWindow()
+          window.removeMenu()
           var gotToken = false
           window.on('closed', () => {
             isLoginWindowOpen = false
