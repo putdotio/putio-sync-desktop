@@ -157,7 +157,11 @@ app.on('ready', () => {
 autoUpdater.logger = log
 
 autoUpdater.on('error', (error) => {
-  log.error(error == null ? 'unknown' : (error.stack || error).toString())
+  if (error === null) {
+    log.error('unknown updater error')
+  } else {
+    log.error((error.stack || error).toString())
+  }
 })
 
 autoUpdater.on('update-available', async () => {
