@@ -57,6 +57,6 @@ jobs:
           mkdir -p ~/private_keys/ && echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
 
       - name: Build and release Electron app
-        run: yarn run electron-builder --${{ matrix.platform }} --publish onTag --config.extraMetadata.version=${{ env.VERSION }}
+        run: yarn run electron-builder --${{ matrix.platform }} --config.extraMetadata.version=${{ env.VERSION }}
         env:
           VERSION: 0.0.0
