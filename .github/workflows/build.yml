@@ -4,6 +4,7 @@ on: push
 
 env:
   VERSION: 0.0.0
+  PUBLISH: never
 
 jobs:
   build:
@@ -42,6 +43,7 @@ jobs:
         run: |
           echo '::set-env name=GH_TOKEN::'${{ secrets.github_token }}
           echo '::set-env name=VERSION::$(echo '${{ github.ref }}' | cut -d / -f 3 | tr -d v)'
+          echo '::set-env name=PUBLISH::always'
           yarn run downloadBinary
         env:
           GH_TOKEN: ${{ secrets.github_token }}
@@ -60,4 +62,4 @@ jobs:
           mkdir -p ~/private_keys/ && echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
 
       - name: Build and release Electron app
-        run: yarn run electron-builder --${{ matrix.platform }} --publish onTag --config.extraMetadata.version=${{ env.VERSION }}
+        run: yarn run electron-builder --${{ matrix.platform }} --publish ${{ env.PUBLISH }} --config.extraMetadata.version=${{ env.VERSION }}

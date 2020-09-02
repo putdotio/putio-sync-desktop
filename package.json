@@ -14,8 +14,7 @@
     "compile": "electron-webpack",
     "dist": "yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder",
     "lint": "eslint --ext .ts .",
-    "downloadBinary": "ts-node downloadBinary",
-    "release": "yarn version --patch && git push --follow-tags"
+    "downloadBinary": "ts-node downloadBinary"
   },
   "electronWebpack": {
     "renderer": {
