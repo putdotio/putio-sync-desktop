@@ -7,11 +7,12 @@ import * as os from 'os'
 import * as fs from 'fs'
 import settings from 'electron-settings'
 import { autoUpdater } from 'electron-updater'
-import * as Sentry from '@sentry/node'
+import * as Sentry from '@sentry/electron'
 
+const isProduction = process.env.NODE_ENV === 'production'
 const sentryCloseTimeout = 2000
-const sentryDsn = 'https://5c009cfd39184be682d42ab5cffb41fc@o804.ingest.sentry.io/5416659'
-Sentry.init({ dsn: sentryDsn })
+const sentryDsn = 'https://ad46d90a598349bfbe95bd6a965447fe@o804.ingest.sentry.io/5416717'
+Sentry.init({ dsn: sentryDsn, debug: !isProduction })
 
 process.on('unhandledRejection', async (reason, p) => {
   log.error('Unhandled Rejection at:', p, 'reason:', reason)
@@ -34,7 +35,6 @@ const exitCodeAuthenticationError = 11
 const authURL = 'https://api.put.io/v2/oauth2/authenticate?response_type=token&client_id=4785&redirect_uri=http%3A%2F%2Flocalhost'
 const exe = os.platform() === 'win32' ? 'putio-sync.exe' : 'putio-sync'
 const configPath = String(spawnSync(path.join(binPath, exe), ['-print-config-path']).stdout).trim()
-const isProduction = process.env.NODE_ENV === 'production'
 var isLoginWindowOpen = false
 var pendingUpdate = false
 
