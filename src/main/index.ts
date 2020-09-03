@@ -168,12 +168,16 @@ app.on('ready', () => {
 })
 
 let checkingUpdate = false
-function checkUpdate () {
+async function checkUpdate () {
   if (checkingUpdate) {
     return
   }
   checkingUpdate = true
-  autoUpdater.checkForUpdates()
+  try {
+    await autoUpdater.checkForUpdates()
+  } catch (err) {
+    checkingUpdate = false
+  }
 }
 
 autoUpdater.logger = log
