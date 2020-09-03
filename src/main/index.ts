@@ -181,18 +181,10 @@ async function checkUpdate () {
 }
 
 autoUpdater.logger = log
-autoUpdater.on('error', (err) => {
-  log.error(err === null ? 'unknown updater error' : (err.stack || err).toString())
-  checkingUpdate = false
-})
-autoUpdater.on('checking-for-update', () => { log.info('Checking for update...') })
-autoUpdater.on('update-available', () => { log.info('Update available.') })
-autoUpdater.on('update-not-available', () => {
-  log.info('Current version is up-to-date.')
-  checkingUpdate = false
-})
+autoUpdater.on('error', () => { checkingUpdate = false })
+autoUpdater.on('update-not-available', () => { checkingUpdate = false })
 autoUpdater.on('update-downloaded', () => {
-  log.info('Update downloaded, application will be quit for update.')
+  log.warn('Update downloaded, application will be quit for update.')
   if (isLoginWindowOpen) {
     pendingUpdate = true
   } else {
