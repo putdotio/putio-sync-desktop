@@ -9,10 +9,13 @@ import settings from 'electron-settings'
 import { autoUpdater } from 'electron-updater'
 import * as Sentry from '@sentry/node'
 
-Sentry.init({ dsn: 'https://5c009cfd39184be682d42ab5cffb41fc@o804.ingest.sentry.io/5416659' })
+const sentryCloseTimeout = 2000
+const sentryDsn = 'https://5c009cfd39184be682d42ab5cffb41fc@o804.ingest.sentry.io/5416659'
+Sentry.init({ dsn: sentryDsn })
 
-process.on('unhandledRejection', (reason, p) => {
+process.on('unhandledRejection', async (reason, p) => {
   log.error('Unhandled Rejection at:', p, 'reason:', reason)
+  await Sentry.close(sentryCloseTimeout)
   process.exit(1)
 })
 
@@ -37,6 +40,11 @@ var pendingUpdate = false
 
 log.info(`Settings file: ${settings.file()}`)
 
+async function quitApp () {
+  await Sentry.close(sentryCloseTimeout)
+  app.quit()
+}
+
 async function openConfig () {
   // shell.openPath does not work if target does not exist
   fs.closeSync(fs.openSync(configPath, 'a'))
@@ -52,11 +60,9 @@ function createMenu (syncStatus: string) {
   return Menu.buildFromTemplate([
     { label: syncStatus, id: 'syncStatus', enabled: false },
     { label: 'Launch on startup', id: 'autoLaunch', type: 'checkbox', checked: app.getLoginItemSettings().openAtLogin, click: onAutoLaunchClick },
-    // { label: 'Open config file', click: openConfig },
     { label: 'Open log file', click: () => { shell.openPath(logPath) } },
-    { label: 'Logout', click: async () => { await settings.unset('token'); app.quit() } },
-    // { label: 'Restart', click: () => { app.relaunc(); app.quit() } },
-    { label: 'Quit', role: 'quit' }
+    { label: 'Logout', click: async () => { await settings.unset('token'); quitApp() } },
+    { label: 'Quit', click: quitApp }
   ])
 }
 
@@ -122,7 +128,7 @@ app.on('ready', () => {
             detail: 'Press OK to edit config file. Relaunch the app after editing config.'
           })
           openConfig()
-          app.quit()
+          quitApp()
           break
         }
         case exitCodeAuthenticationError: {
@@ -135,7 +141,7 @@ app.on('ready', () => {
             if (pendingUpdate) {
               autoUpdater.quitAndInstall(true, true)
             } else {
-              gotToken ? startApp() : app.quit()
+              gotToken ? startApp() : quitApp()
             }
           })
           await window.webContents.session.clearStorageData()
@@ -153,7 +159,7 @@ app.on('ready', () => {
           break
         }
         default: {
-          app.quit()
+          quitApp()
         }
       }
     })
