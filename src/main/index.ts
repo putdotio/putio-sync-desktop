@@ -7,6 +7,9 @@ import * as os from 'os'
 import * as fs from 'fs'
 import settings from 'electron-settings'
 import { autoUpdater } from 'electron-updater'
+import * as Sentry from '@sentry/node'
+
+Sentry.init({ dsn: 'https://5c009cfd39184be682d42ab5cffb41fc@o804.ingest.sentry.io/5416659' })
 
 process.on('unhandledRejection', (reason, p) => {
   log.error('Unhandled Rejection at:', p, 'reason:', reason)

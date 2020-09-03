@@ -39,6 +39,7 @@
     }
   },
   "dependencies": {
+    "@sentry/node": "^5.22.3",
     "electron-log": "^4.2.4",
     "electron-settings": "^4.0.2",
     "electron-squirrel-startup": "^1.0.0",
