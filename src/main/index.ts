@@ -10,19 +10,17 @@ import { autoUpdater } from 'electron-updater'
 import * as Sentry from '@sentry/electron'
 
 const isProduction = process.env.NODE_ENV === 'production'
-const sentryCloseTimeout = 2000
 const sentryDsn = 'https://ad46d90a598349bfbe95bd6a965447fe@o804.ingest.sentry.io/5416717'
 Sentry.init({ dsn: sentryDsn, debug: !isProduction })
 
-process.on('unhandledRejection', async (reason, p) => {
-  log.error('Unhandled Rejection at:', p, 'reason:', reason)
-  await Sentry.close(sentryCloseTimeout)
-  process.exit(1)
-})
+async function quitApp () {
+  await Sentry.close(2000)
+  app.quit()
+}
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
-  app.quit()
+  quitApp()
 }
 
 declare var __static: string
@@ -39,11 +37,6 @@ var isLoginWindowOpen = false
 var pendingUpdate = false
 
 log.info(`Settings file: ${settings.file()}`)
-
-async function quitApp () {
-  await Sentry.close(sentryCloseTimeout)
-  app.quit()
-}
 
 async function openConfig () {
   // shell.openPath does not work if target does not exist
