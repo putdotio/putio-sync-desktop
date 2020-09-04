@@ -24,7 +24,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 }
 
 declare var __static: string
-const iconPath = path.join(__static, 'img', 'tray-icon.png')
+const iconPath = path.join(__static, 'img', process.platform === 'win32' ? 'tray-icon.ico' : 'tray-icon.png')
 const host = '127.0.0.1'
 const logPath = log.transports.file.getFile().path
 const binPath = path.join(__static, 'bin')
