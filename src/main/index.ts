@@ -59,10 +59,7 @@ function createMenu (syncStatus: string) {
   ])
 }
 
-// do not quit application when main window is closed
-app.on('window-all-closed', () => {})
-
-app.on('ready', () => {
+function onAppReady () {
   if (isProduction && !settings.getSync('setAutoLaunch')) {
     log.info('First run of the application. Setting app to launch on login.')
     app.setLoginItemSettings({ openAtLogin: true })
@@ -166,7 +163,7 @@ app.on('ready', () => {
       checkUpdate()
     }, 10 * 60 * 1000)
   }
-})
+}
 
 let checkingUpdate = false
 async function checkUpdate () {
@@ -193,3 +190,12 @@ autoUpdater.on('update-downloaded', () => {
   }
 })
 autoUpdater.on('download-progress', (progressObj) => { log.info(`Update download speed: ${(progressObj.bytesPerSecond / 1024).toFixed()} KBps, downloaded: ${progressObj.percent.toFixed(2)} %`) })
+
+// do not quit application when main window is closed
+app.on('window-all-closed', () => {})
+
+if (app.requestSingleInstanceLock()) {
+  app.on('ready', onAppReady)
+} else {
+  quitApp()
+}
