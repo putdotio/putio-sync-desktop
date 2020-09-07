@@ -136,13 +136,13 @@ function onAppReady () {
               gotToken ? startApp() : quitApp()
             }
           })
-          await window.webContents.session.clearStorageData()
           window.webContents.on('will-redirect', async (event, url) => {
             if (url.startsWith('http://localhost')) {
               event.preventDefault()
               const parsedHash = new URLSearchParams(url.split('#', 2)[1])
               const token = parsedHash.get('access_token')
               await settings.set('token', token)
+              await window.webContents.session.clearStorageData()
               gotToken = true
               window.close()
             }
