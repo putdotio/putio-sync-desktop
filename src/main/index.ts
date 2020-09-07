@@ -96,8 +96,11 @@ function onAppReady () {
       request.end()
     }, 1000)
 
-    const token = await settings.get('token')
-    const child = spawn(path.join(binPath, exe), ['-repeat', '1m', '-server', host + ':' + port, '-password', `token/${token}`], { stdio: ['ignore', 'ignore', 'pipe'] })
+    const env = Object.create(process.env)
+    env.PASSWORD = `token/${await settings.get('token')}`
+    env.REPEAT = '1m'
+    env.SERVER = host + ':' + port
+    const child = spawn(path.join(binPath, exe), [], { stdio: ['ignore', 'ignore', 'pipe'], env: env })
     app.once('before-quit', () => { child.kill('SIGKILL') })
     var lastStderrLine = ''
     child.stderr.on('data', (data) => {
