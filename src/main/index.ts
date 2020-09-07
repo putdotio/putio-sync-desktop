@@ -51,6 +51,7 @@ function onAutoLaunchClick (menuItem: any) {
 
 function createMenu (syncStatus: string) {
   return Menu.buildFromTemplate([
+    { label: 'Go to put.io', click: () => { shell.openExternal('https://put.io') } },
     { label: syncStatus, id: 'syncStatus', enabled: false },
     { label: 'Launch on startup', id: 'autoLaunch', type: 'checkbox', checked: app.getLoginItemSettings().openAtLogin, click: onAutoLaunchClick },
     { label: 'Open log file', click: () => { shell.openPath(logPath) } },
