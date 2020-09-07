@@ -70,6 +70,7 @@ app.on('ready', () => {
   }
 
   const tray = new Tray(iconPath)
+  tray.setToolTip('Putio Sync')
   tray.setContextMenu(createMenu('Starting to sync...'))
 
   async function startApp () {
