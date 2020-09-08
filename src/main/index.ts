@@ -8,6 +8,7 @@ import * as fs from 'fs'
 import settings from 'electron-settings'
 import { autoUpdater } from 'electron-updater'
 import * as Sentry from '@sentry/electron'
+import * as querystring from 'querystring'
 
 const isProduction = process.env.NODE_ENV === 'production'
 const sentryDsn = 'https://ad46d90a598349bfbe95bd6a965447fe@o804.ingest.sentry.io/5416717'
@@ -30,7 +31,13 @@ const logPath = log.transports.file.getFile().path
 const binPath = path.join(__static, 'bin')
 const exitCodeConfigError = 10
 const exitCodeAuthenticationError = 11
-const authURL = 'https://api.put.io/v2/oauth2/authenticate?response_type=token&client_id=4785&redirect_uri=http%3A%2F%2Flocalhost'
+const authParams = {
+  response_type: 'token',
+  client_id: 4785,
+  client_name: `${os.hostname()} (Desktop app)`,
+  redirect_uri: 'http://localhost'
+}
+const authURL = `https://api.put.io/v2/oauth2/authenticate?${querystring.stringify(authParams)}`
 const exe = os.platform() === 'win32' ? 'putio-sync.exe' : 'putio-sync'
 const configPath = String(spawnSync(path.join(binPath, exe), ['-print-config-path']).stdout).trim()
 var isLoginWindowOpen = false
