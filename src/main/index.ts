@@ -43,6 +43,7 @@ const configPath = String(spawnSync(path.join(binPath, exe), ['-print-config-pat
 var isLoginWindowOpen = false
 var pendingUpdate = false
 
+log.info(`Starting putio-sync-desktop version: ${app.getVersion()}`)
 log.info(`Settings file: ${settings.file()}`)
 
 async function openConfig () {
