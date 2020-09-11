@@ -172,7 +172,7 @@ function onAppReady () {
   startApp()
   if (isProduction) {
     checkUpdate()
-    setTimeout(() => {
+    setInterval(() => {
       checkUpdate()
     }, 10 * 60 * 1000)
   }
