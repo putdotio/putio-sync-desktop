@@ -35,7 +35,8 @@ const authParams = {
   response_type: 'token',
   client_id: 4785,
   client_name: `${os.hostname()} (Desktop app)`,
-  redirect_uri: 'http://localhost'
+  redirect_uri: 'http://localhost',
+  popup: true
 }
 const authURL = `https://api.put.io/v2/oauth2/authenticate?${querystring.stringify(authParams)}`
 const exe = os.platform() === 'win32' ? 'putio-sync.exe' : 'putio-sync'
