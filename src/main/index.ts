@@ -79,6 +79,16 @@ function onAppReady () {
   const tray = new Tray(iconPath)
   tray.setToolTip('Putio Sync')
   tray.setContextMenu(createMenu('Starting to sync...'))
+  tray.on('drop-text', async (event, text) => {
+    if (!text.startsWith('magnet:')) {
+      return
+    }
+    const token = await settings.get('token')
+    if (!token) {
+      return
+    }
+    shell.openExternal(`https://app.put.io/transfers?${ querystring.stringify({ magnet: text })}`)
+  })
 
   async function startApp () {
     const port = await getPort({ host: host })
