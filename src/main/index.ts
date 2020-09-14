@@ -11,8 +11,11 @@ import * as Sentry from '@sentry/electron'
 import * as querystring from 'querystring'
 
 const isProduction = process.env.NODE_ENV === 'production'
-const sentryDsn = 'https://ad46d90a598349bfbe95bd6a965447fe@o804.ingest.sentry.io/5416717'
-Sentry.init({ dsn: sentryDsn, debug: !isProduction })
+const sentryDsn = process.env.ELECTRON_WEBPACK_APP_SENTRY_DSN
+if (sentryDsn) {
+  log.info('Initializing Sentry')
+  Sentry.init({ dsn: sentryDsn, debug: !isProduction })
+}
 
 async function quitApp () {
   await Sentry.close(2000)

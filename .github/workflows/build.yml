@@ -54,6 +54,7 @@ jobs:
         shell: bash
         run: |
           echo '::set-env name=GH_TOKEN::'${{ secrets.github_token }}
+          echo '::set-env name=ELECTRON_WEBPACK_APP_SENTRY_DSN::'${{ secrets.sentry_dsn }}
           echo '::set-env name=VERSION::$(echo '${{ github.ref }}' | cut -d / -f 3 | tr -d v)'
           echo '::set-env name=PUBLISH::always'
           yarn run downloadBinary
