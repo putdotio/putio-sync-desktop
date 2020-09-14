@@ -15,6 +15,12 @@ const sentryDsn = process.env.ELECTRON_WEBPACK_APP_SENTRY_DSN
 if (sentryDsn) {
   log.info('Initializing Sentry')
   Sentry.init({ dsn: sentryDsn, debug: !isProduction })
+} else {
+  // Hooking to unhandledRejection event prevents Sentry from collecting them.
+  // Maybe this is a bug or I didn't understand how it works :(
+  process.on('unhandledRejection', (reason, promise) => {
+    console.log('Unhandled Rejection at:', promise, 'reason:', reason)
+  })
 }
 
 async function quitApp () {
