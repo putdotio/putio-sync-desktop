@@ -18,7 +18,7 @@ if (sentryDsn) {
 }
 
 async function quitApp () {
-  await Sentry.close(2000)
+  if (sentryDsn) await Sentry.close(2000)
   app.quit()
 }
 
