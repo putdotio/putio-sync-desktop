@@ -19,7 +19,7 @@ if (sentryDsn) {
   // Hooking to unhandledRejection event prevents Sentry from collecting them.
   // Maybe this is a bug or I didn't understand how it works :(
   process.on('unhandledRejection', (reason, promise) => {
-    console.log('Unhandled Rejection at:', promise, 'reason:', reason)
+    log.error('Unhandled Rejection at:', promise, 'reason:', reason)
   })
 }
 
@@ -63,7 +63,6 @@ async function openConfig () {
 }
 
 function onAutoLaunchClick (menuItem: any) {
-  console.log(`is auto-launch menu item checked: ${menuItem.checked}`)
   app.setLoginItemSettings({ openAtLogin: menuItem.checked })
 }
 
@@ -238,5 +237,6 @@ app.on('window-all-closed', () => {})
 if (app.requestSingleInstanceLock()) {
   app.on('ready', onAppReady)
 } else {
+  log.warn('An instance of Putio Sync is already running. Quitting this instance.')
   quitApp()
 }
