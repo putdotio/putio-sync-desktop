@@ -172,6 +172,10 @@ function onAppReady () {
               window.close()
             }
           })
+          window.webContents.on('new-window', function (event, url) {
+            event.preventDefault()
+            shell.openExternal(url)
+          })
           window.loadURL(authURL)
           break
         }
