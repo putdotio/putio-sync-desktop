@@ -45,8 +45,8 @@ const exitCodeConfigError = 10
 const exitCodeAuthenticationError = 11
 const authParams = {
   response_type: 'token',
-  client_id: 4785,
-  client_name: `${os.hostname()} (Desktop app)`,
+  client_id: 4865,
+  client_name: os.hostname(),
   redirect_uri: 'http://localhost',
   popup: true
 }
