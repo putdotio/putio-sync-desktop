@@ -11,9 +11,11 @@ import * as Sentry from '@sentry/electron'
 import * as querystring from 'querystring'
 
 const isProduction = process.env.NODE_ENV === 'production'
+
+// We initialize Sentry plugin first to capture all exceptions.
 const sentryDsn = process.env.ELECTRON_WEBPACK_APP_SENTRY_DSN
 if (sentryDsn) {
-  log.info('Initializing Sentry')
+  log.info('Initializing Sentry') // This log is here to ensure that Sentry DSN is set by Webpack on build correctly.
   Sentry.init({ dsn: sentryDsn, debug: !isProduction })
 } else {
   // Hooking to unhandledRejection event prevents Sentry from collecting them.
@@ -23,6 +25,7 @@ if (sentryDsn) {
   })
 }
 
+// quitApp must be called instead of app.quit() to allow Sentry to flush queued events before exit.
 async function quitApp () {
   if (sentryDsn) await Sentry.close(2000)
   app.quit()
@@ -114,6 +117,8 @@ function onAppReady () {
           } catch (e) {
             return
           }
+          // Menu contains an item that shows the current status of sync operation.
+          // Changing MenuItem titles is not allowed. That's why always a new Menu is created.
           tray.setContextMenu(createMenu(parsed.status))
         })
       })
