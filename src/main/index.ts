@@ -150,7 +150,7 @@ function onAppReady () {
         }
         case exitCodeAuthenticationError: {
           isLoginWindowOpen = true
-          const window = new BrowserWindow()
+          const window = new BrowserWindow({ title: 'Login to put.io' })
           window.removeMenu()
           var gotToken = false
           window.on('close', async () => {
@@ -163,6 +163,9 @@ function onAppReady () {
             } else {
               gotToken ? startApp() : quitApp()
             }
+          })
+          window.on('page-title-updated', (event) => {
+            event.preventDefault()
           })
           window.webContents.on('will-redirect', async (event, url) => {
             if (url.startsWith('http://localhost')) {
