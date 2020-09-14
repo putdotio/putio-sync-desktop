@@ -153,6 +153,9 @@ function onAppReady () {
           const window = new BrowserWindow()
           window.removeMenu()
           var gotToken = false
+          window.on('close', async () => {
+            await window.webContents.session.clearStorageData()
+          })
           window.on('closed', () => {
             isLoginWindowOpen = false
             if (pendingUpdate) {
@@ -167,7 +170,6 @@ function onAppReady () {
               const parsedHash = new URLSearchParams(url.split('#', 2)[1])
               const token = parsedHash.get('access_token')
               await settings.set('token', token)
-              await window.webContents.session.clearStorageData()
               gotToken = true
               window.close()
             }
