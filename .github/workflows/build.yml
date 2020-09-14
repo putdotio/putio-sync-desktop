@@ -46,6 +46,10 @@ jobs:
       - name: Run linter
         run: yarn run lint
 
+      - name: Set Webpack build arguments
+        shell: bash
+        run: echo '::set-env name=ELECTRON_WEBPACK_APP_SENTRY_DSN::'${{ secrets.sentry_dsn }}
+
       - name: Compile Webpack
         run: yarn run compile
 
