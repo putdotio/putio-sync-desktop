@@ -48,6 +48,7 @@ const authParams = {
   client_id: 4865,
   client_name: os.hostname(),
   redirect_uri: 'http://localhost',
+  isolated: true,
   popup: true
 }
 const authURL = `https://api.put.io/v2/oauth2/authenticate?${querystring.stringify(authParams)}`
@@ -160,7 +161,7 @@ function onAppReady () {
         }
         case exitCodeAuthenticationError: {
           isLoginWindowOpen = true
-          const window = new BrowserWindow({ title: 'Login to put.io' })
+          const window = new BrowserWindow({ title: 'Login to put.io', backgroundColor: '#333333' })
           window.removeMenu()
           var gotToken = false
           window.on('close', async () => {
