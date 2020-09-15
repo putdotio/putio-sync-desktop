@@ -9,6 +9,7 @@ import settings from 'electron-settings'
 import { autoUpdater } from 'electron-updater'
 import * as Sentry from '@sentry/electron'
 import * as querystring from 'querystring'
+import PutioAPI from '@putdotio/api-client'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -43,9 +44,10 @@ const logPath = log.transports.file.getFile().path
 const binPath = path.join(__static, 'bin')
 const exitCodeConfigError = 10
 const exitCodeAuthenticationError = 11
+const oauthCliendID = 4865
 const authParams = {
   response_type: 'token',
-  client_id: 4865,
+  client_id: oauthCliendID,
   client_name: os.hostname(),
   redirect_uri: 'http://localhost',
   isolated: true,
@@ -54,6 +56,8 @@ const authParams = {
 const authURL = `https://api.put.io/v2/oauth2/authenticate?${querystring.stringify(authParams)}`
 const exe = os.platform() === 'win32' ? 'putio-sync.exe' : 'putio-sync'
 const configPath = String(spawnSync(path.join(binPath, exe), ['-print-config-path']).stdout).trim()
+const API = new PutioAPI({ clientID: oauthCliendID })
+
 var isLoginWindowOpen = false
 var pendingUpdate = false
 
@@ -95,11 +99,10 @@ function onAppReady () {
     if (!text.startsWith('magnet:')) {
       return
     }
-    const token = await settings.get('token')
-    if (!token) {
+    if (!API.token) {
       return
     }
-    shell.openExternal(`https://app.put.io/transfers?${querystring.stringify({ magnet: text })}`)
+    API.Transfers.Add({ url: text, saveTo: 0 })
   })
 
   async function startApp () {
@@ -183,7 +186,10 @@ function onAppReady () {
               event.preventDefault()
               const parsedHash = new URLSearchParams(url.split('#', 2)[1])
               const token = parsedHash.get('access_token')
-              await settings.set('token', token)
+              if (token) {
+                API.setToken(token)
+                await settings.set('token', token)
+              }
               gotToken = true
               window.close()
             }
@@ -242,6 +248,7 @@ app.on('window-all-closed', () => {})
 
 if (app.requestSingleInstanceLock()) {
   app.on('ready', onAppReady)
+  settings.get('token').then((token) => { API.setToken(token as string) })
 } else {
   log.warn('An instance of Putio Sync is already running. Quitting this instance.')
   quitApp()

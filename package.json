@@ -39,6 +39,7 @@
     }
   },
   "dependencies": {
+    "@putdotio/api-client": "^8.7.0",
     "@sentry/electron": "^2.0.0",
     "electron-log": "^4.2.4",
     "electron-settings": "^4.0.2",
@@ -48,6 +49,7 @@
     "source-map-support": "^0.5.19"
   },
   "devDependencies": {
+    "@types/event-emitter": "^0.3.3",
     "@types/node": "^12",
     "@typescript-eslint/eslint-plugin": "^3.10.1",
     "@typescript-eslint/parser": "^3.10.1",
@@ -65,7 +67,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "tar-stream": "^2.1.3",
     "ts-node": "^9.0.0",
-    "typescript": "^3",
+    "typescript": "3.9.7",
     "unzipper": "^0.10.11",
     "webpack": "~4.42.1"
   }
