@@ -44,10 +44,10 @@ const logPath = log.transports.file.getFile().path
 const binPath = path.join(__static, 'bin')
 const exitCodeConfigError = 10
 const exitCodeAuthenticationError = 11
-const oauthCliendID = 4865
+const oauthClientID = 4865
 const authParams = {
   response_type: 'token',
-  client_id: oauthCliendID,
+  client_id: oauthClientID,
   client_name: os.hostname(),
   redirect_uri: 'http://localhost',
   isolated: true,
@@ -56,7 +56,7 @@ const authParams = {
 const authURL = `https://api.put.io/v2/oauth2/authenticate?${querystring.stringify(authParams)}`
 const exe = os.platform() === 'win32' ? 'putio-sync.exe' : 'putio-sync'
 const configPath = String(spawnSync(path.join(binPath, exe), ['-print-config-path']).stdout).trim()
-const API = new PutioAPI({ clientID: oauthCliendID })
+const API = new PutioAPI({ clientID: oauthClientID })
 
 var isLoginWindowOpen = false
 var pendingUpdate = false
