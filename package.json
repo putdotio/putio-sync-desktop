@@ -39,7 +39,7 @@
     }
   },
   "dependencies": {
-    "@putdotio/api-client": "^8.7.0",
+    "@putdotio/api-client": "^8.9.0",
     "@sentry/electron": "^2.0.0",
     "electron-log": "^4.2.4",
     "electron-settings": "^4.0.2",

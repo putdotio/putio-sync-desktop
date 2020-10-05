@@ -104,7 +104,7 @@ function onAppReady () {
     if (!text.startsWith('magnet:')) {
       return
     }
-    API.Transfers.Add({ url: text, saveTo: 0 })
+    API.Transfers.Add({ url: text })
   })
   tray.on('drop-files', async (event, files) => {
     if (!API.token) {
