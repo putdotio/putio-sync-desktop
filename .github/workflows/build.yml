@@ -48,7 +48,7 @@ jobs:
 
       - name: Set Webpack build arguments
         shell: bash
-        run: echo '::set-env name=ELECTRON_WEBPACK_APP_SENTRY_DSN::'${{ secrets.sentry_dsn }}
+        run: echo 'ELECTRON_WEBPACK_APP_SENTRY_DSN='${{ secrets.sentry_dsn }} >> $GITHUB_ENV
 
       - name: Compile Webpack
         run: yarn run compile
@@ -57,9 +57,9 @@ jobs:
         if: ${{ startsWith(github.ref, 'refs/tags/v') }}
         shell: bash
         run: |
-          echo '::set-env name=GH_TOKEN::'${{ secrets.github_token }}
-          echo '::set-env name=VERSION::$(echo '${{ github.ref }}' | cut -d / -f 3 | tr -d v)'
-          echo '::set-env name=PUBLISH::always'
+          echo 'GH_TOKEN='${{ secrets.github_token }} >> $GITHUB_ENV
+          echo 'VERSION=$(echo '${{ github.ref }}' | cut -d / -f 3 | tr -d v)' >> $GITHUB_ENV
+          echo 'PUBLISH=always' >> $GITHUB_ENV
           yarn run downloadBinary
         env:
           GH_TOKEN: ${{ secrets.github_token }}
@@ -69,12 +69,12 @@ jobs:
         shell: bash
         run: |
           # for signing
-          echo '::set-env name=CSC_LINK::'${{ secrets.mac_certs }}
-          echo '::set-env name=CSC_KEY_PASSWORD::'${{ secrets.mac_certs_password }}
+          echo 'CSC_LINK='${{ secrets.mac_certs }} >> $GITHUB_ENV
+          echo 'CSC_KEY_PASSWORD='${{ secrets.mac_certs_password }} >> $GITHUB_ENV
 
           # for notarization
-          echo '::set-env name=API_KEY_ID::'${{ secrets.api_key_id }}
-          echo '::set-env name=API_KEY_ISSUER_ID::'${{ secrets.api_key_issuer_id }}
+          echo 'API_KEY_ID='${{ secrets.api_key_id }} >> $GITHUB_ENV
+          echo 'API_KEY_ISSUER_ID='${{ secrets.api_key_issuer_id }} >> $GITHUB_ENV
           mkdir -p ~/private_keys/ && echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
 
       - name: Build and release Electron app
