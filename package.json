@@ -46,7 +46,8 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^4.3.4",
     "get-port": "^5.1.1",
-    "source-map-support": "^0.5.19"
+    "source-map-support": "^0.5.19",
+    "tus-js-client": "^2.2.0"
   },
   "devDependencies": {
     "@types/event-emitter": "^0.3.3",

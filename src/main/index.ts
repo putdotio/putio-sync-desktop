@@ -10,6 +10,7 @@ import { autoUpdater } from 'electron-updater'
 import * as Sentry from '@sentry/electron'
 import * as querystring from 'querystring'
 import PutioAPI from '@putdotio/api-client'
+import * as tus from 'tus-js-client'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -57,6 +58,7 @@ const authURL = `https://api.put.io/v2/oauth2/authenticate?${querystring.stringi
 const exe = os.platform() === 'win32' ? 'putio-sync.exe' : 'putio-sync'
 const configPath = String(spawnSync(path.join(binPath, exe), ['-print-config-path']).stdout).trim()
 const API = new PutioAPI({ clientID: oauthClientID })
+const tusEndpoint = 'https://upload.put.io/files/'
 
 var isLoginWindowOpen = false
 var pendingUpdate = false
@@ -96,13 +98,47 @@ function onAppReady () {
   tray.setToolTip('Putio Sync')
   tray.setContextMenu(createMenu('Starting to sync...'))
   tray.on('drop-text', async (event, text) => {
-    if (!text.startsWith('magnet:')) {
-      return
-    }
     if (!API.token) {
       return
     }
+    if (!text.startsWith('magnet:')) {
+      return
+    }
     API.Transfers.Add({ url: text, saveTo: 0 })
+  })
+  tray.on('drop-files', async (event, files) => {
+    if (!API.token) {
+      return
+    }
+    if (!files) {
+      return
+    }
+    const fpath = files[0]
+    if (!fpath) {
+      return
+    }
+    if (!fpath.endsWith('.torrent')) {
+      return
+    }
+    const file = fs.createReadStream(fpath)
+    const size = fs.statSync(fpath).size
+    log.info(`TUS uploading file: ${fpath}`)
+    var upload = new tus.Upload(file, {
+      endpoint: tusEndpoint,
+      metadata: {
+        name: path.basename(fpath),
+        torrent: 'true'
+      },
+      uploadSize: size,
+      headers: { authorization: `token ${API.token}` },
+      onError: function (error) { log.error(`TUS upload failed because: ${error}`) },
+      onProgress: function (bytesUploaded, bytesTotal) {
+        var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2)
+        log.info('TUS upload progress: ', bytesUploaded, bytesTotal, percentage + '%')
+      },
+      onSuccess: function () { log.info(`File uploaded to: ${upload.url}`) }
+    })
+    upload.start()
   })
 
   async function startApp () {
