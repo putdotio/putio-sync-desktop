@@ -39,7 +39,8 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 }
 
 declare var __static: string
-const iconPath = path.join(__static, 'img', process.platform === 'win32' ? 'tray-icon.ico' : 'tray-icon.png')
+// Filename must end in Template.png or dark-mode version won't work! Also include a @2x.png version for retina screens.
+const iconPath = path.join(__static, 'img', process.platform === 'win32' ? 'IconTemplate.ico' : 'IconTemplate.png')
 const host = '127.0.0.1'
 const logPath = log.transports.file.getFile().path
 const binPath = path.join(__static, 'bin')
