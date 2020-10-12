@@ -169,9 +169,8 @@ function onAppReady () {
     }, 1000)
 
     const env = Object.create(process.env)
-    env.PASSWORD = `token/${await settings.get('token')}`
-    env.REPEAT = '1m'
-    env.SERVER = host + ':' + port
+    env.PUTIO_Password = `token/${await settings.get('token')}`
+    env.PUTIO_Server = host + ':' + port
     const child = spawn(path.join(binPath, exe), [], { stdio: ['ignore', 'ignore', 'pipe'], env: env })
     app.once('before-quit', () => { child.kill('SIGKILL') })
     var lastStderrLine = ''
