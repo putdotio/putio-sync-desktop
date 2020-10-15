@@ -88,6 +88,14 @@ function createMenu (syncStatus: string) {
   ])
 }
 
+function isMagnetLink (s: string) {
+  return s.startsWith('magnet:')
+}
+
+function isURL (s: string) {
+  return s.startsWith('http://') || s.startsWith('https://')
+}
+
 function onAppReady () {
   if (isProduction && !settings.getSync('setAutoLaunch')) {
     log.info('First run of the application. Setting app to launch on login.')
@@ -99,12 +107,15 @@ function onAppReady () {
   tray.setToolTip('Putio Sync')
   tray.setContextMenu(createMenu('Starting to sync...'))
   tray.on('drop-text', async (event, text) => {
+    log.debug('Text dropped on tray icon:', text)
     if (!API.token) {
       return
     }
-    if (!text.startsWith('magnet:')) {
+    if (!isMagnetLink(text) && !isURL(text)) {
+      log.error('Text is not a magnet or URL')
       return
     }
+    log.info('Adding transfer from:', text)
     API.Transfers.Add({ url: text })
   })
   tray.on('drop-files', async (event, files) => {
@@ -118,7 +129,9 @@ function onAppReady () {
     if (!fpath) {
       return
     }
+    log.debug('File dropped on tray icon:', fpath)
     if (!fpath.endsWith('.torrent')) {
+      log.error('Dropped file is not torrent')
       return
     }
     const file = fs.createReadStream(fpath)
