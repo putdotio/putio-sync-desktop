@@ -54,7 +54,7 @@
     "@types/node": "^12",
     "@typescript-eslint/eslint-plugin": "^3.10.1",
     "@typescript-eslint/parser": "^3.10.1",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "electron": "^10.1.2",
     "electron-builder": "^22.4.1",
     "electron-builder-notarize": "^1.2.0",
