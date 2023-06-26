@@ -12,11 +12,11 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [macos-11, windows-2022]
         include:
-          - os: macos-latest
+          - os: macos-11
             platform: macos
-          - os: windows-latest
+          - os: windows-2022
             platform: windows
 
     steps:
